@@ -167,9 +167,10 @@ body {
 
 /* Interactive Cup Container & Liquid Mask */
 .cup-wrapper {
+  position: relative;
   display: flex;
   justify-content: center;
-  margin: 24px 0;
+  margin: 32px 0 20px 0;
 }
 
 .cup-container {
@@ -219,10 +220,16 @@ body {
 }
 
 .topping-pearl {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.4);
+  animation: floatTopping 2s infinite ease-in-out;
+}
+
+@keyframes floatTopping {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
 }
 
 .timer-display {
@@ -454,4 +461,67 @@ body {
   background: var(--accent-primary);
   color: #FFFFFF;
   border-color: var(--accent-primary);
+}
+
+/* Pomodoro Modes Pills */
+.pomodoro-modes {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.pomo-btn {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pomo-btn.active {
+  background: var(--text-primary);
+  color: #ffffff;
+  border-color: var(--text-primary);
+}
+
+/* Pouring Liquid Stream Animation */
+.pour-stream {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 32px;
+  background: var(--accent-primary, #EE6C4D);
+  border-radius: 4px;
+  z-index: 10;
+  animation: pourFlow 0.5s infinite linear;
+  box-shadow: 0 0 8px var(--accent-primary, #EE6C4D);
+}
+
+@keyframes pourFlow {
+  0% { transform: translateX(-50%) scaleY(0.9); opacity: 0.7; }
+  50% { transform: translateX(-50%) scaleY(1.1); opacity: 1; }
+  100% { transform: translateX(-50%) scaleY(0.9); opacity: 0.7; }
+}
+
+/* Surface Wave Animation */
+.liquid-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.4);
+  animation: waveMotion 1.2s infinite ease-in-out;
+}
+
+@keyframes waveMotion {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
