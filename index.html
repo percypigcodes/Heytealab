@@ -41,17 +41,34 @@
     <section id="timerTab" class="tab-content active">
       <div class="grid-2col">
         
-        <!-- Interactive Timer Card -->
+        <!-- Interactive Animated Timer Card -->
         <div class="card timer-card">
-          <span class="meta-tag">POMODORO TIMER</span>
-          <h2 id="currentDrinkTitle" class="card-title">Very Grape Cheese</h2>
-          <p id="currentDrinkCategory" class="card-subtitle">Cheese Fruit Tea Series • 25 Mins</p>
+          <span class="meta-tag">POMODORO BREWING STATION</span>
+          
+          <!-- Pomodoro Interval Mode Selector -->
+          <div class="pomodoro-modes">
+            <button class="pomo-btn active" data-mode="focus" data-time="25">25m Focus</button>
+            <button class="pomo-btn" data-mode="short" data-time="5">5m Short Break</button>
+            <button class="pomo-btn" data-mode="long" data-time="15">15m Long Break</button>
+          </div>
 
-          <!-- Cup Container with Photo Reveal / Mask Overlay -->
+          <h2 id="currentDrinkTitle" class="card-title">Very Grape Cheese</h2>
+          <p id="currentDrinkCategory" class="card-subtitle">Cheese Fruit Tea Series • 25 Mins Focus</p>
+
+          <!-- Cup & Liquid Pour Animation Area -->
           <div class="cup-wrapper">
+            <!-- Animated Tea Spout Stream -->
+            <div id="pourStream" class="pour-stream hidden"></div>
+
             <div id="cupContainer" class="cup-container">
               <img id="drinkPhotoDisplay" src="" alt="Drink Photo" class="drink-photo hidden" />
-              <div id="liquidMask" class="liquid-mask"></div>
+              
+              <!-- Liquid Mask & Wave Surface -->
+              <div id="liquidMask" class="liquid-mask">
+                <div id="liquidWave" class="liquid-wave hidden"></div>
+              </div>
+
+              <!-- Bobbing Toppings Container -->
               <div id="toppingsContainer" class="toppings-layer"></div>
             </div>
           </div>
@@ -59,16 +76,16 @@
           <!-- Digital Timer Clock -->
           <div id="timerDisplay" class="timer-display">25:00</div>
 
-          <!-- Controls -->
+          <!-- Timer Controls -->
           <div class="btn-group">
-            <button id="startTimerBtn" class="btn-primary">Start Brewing</button>
+            <button id="startTimerBtn" class="btn-primary">Start Brewing 🧋</button>
             <button id="pauseTimerBtn" class="btn-secondary">Pause</button>
             <button id="resetTimerBtn" class="btn-secondary">Reset</button>
           </div>
 
           <!-- 10 Toppings Selector -->
           <div class="toppings-section">
-            <span class="meta-tag">SELECT TOPPINGS (MAX 10)</span>
+            <span class="meta-tag">ADD TOPPINGS (MAX 10)</span>
             <div id="toppingsList" class="toppings-grid"></div>
           </div>
         </div>
