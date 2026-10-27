@@ -1,9 +1,8 @@
 /* ==========================================================================
-   HEYTEA STUDIO WORKSPACE CORE ENGINE
-   Unlocks, High-Res Preset Photography, Stamp Loyalty System & Rotation
+   HEYTEA STUDIO WORKSPACE CORE ENGINE WITH VISUAL CALENDAR & WIDGET FORMS
    ========================================================================== */
 
-// 1. 47 Iconic HeyTea Drinks Menu with Preset Images & Stamp Lock Tiers
+// 1. 47 Iconic HeyTea Drinks Menu Array
 const HEYTEA_DRINKS = [
   { id: 'd1', name: 'Very Grape Cheese', category: 'Cheese Fruit Tea', mins: 25, stampsReq: 0, img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80' },
   { id: 'd2', name: 'Crisp Grape Boom', category: 'Fruit Tea', mins: 25, stampsReq: 0, img: 'https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?auto=format&fit=crop&w=600&q=80' },
@@ -22,7 +21,6 @@ const HEYTEA_DRINKS = [
   { id: 'd15', name: 'Mango Sago Coconut Cream', category: 'Specialty', mins: 50, stampsReq: 5, img: 'https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=600&q=80' }
 ];
 
-// Fill remaining menu slots programmatically to reach 47 total items
 for (let i = 16; i <= 47; i++) {
   HEYTEA_DRINKS.push({
     id: `d${i}`,
@@ -48,7 +46,7 @@ const TOPPINGS = [
   { id: 'mango', name: 'Mango Pearls', color: '#FFC107' }
 ];
 
-// Global Application State
+// Global State
 let currentDrink = HEYTEA_DRINKS[0];
 let activePomoMinutes = currentDrink.mins;
 let timerInterval = null;
@@ -56,12 +54,14 @@ let timeRemaining = activePomoMinutes * 60;
 let isTimerRunning = false;
 let selectedToppings = [];
 let habitViewMode = 'day';
+let currentCalDate = new Date();
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initThemeExtractor();
   initTimerAndMenu();
   initSyllabusAndVault();
+  initCalendarAndWidgets();
   initRoutineBuilder();
   initVentingJournal();
   initHabitTracker();
@@ -124,13 +124,12 @@ function renderPalettePreview(colors) {
   container.innerHTML = colors.map(c => `<div class="color-swatch" style="background: ${c}"></div>`).join('');
 }
 
-// STAMP LOYALTY SYSTEM FUNCTIONS
 function getCompletedMinutes() {
   return parseInt(localStorage.getItem('heytea_focus_mins') || '0', 10);
 }
 
 function getStampsCount() {
-  return Math.floor(getCompletedMinutes() / 60); // 1 Stamp per 60 Mins
+  return Math.floor(getCompletedMinutes() / 60);
 }
 
 function updateStampDisplay() {
@@ -145,7 +144,7 @@ function renderMenuDropdown() {
   
   drinkSelect.innerHTML = HEYTEA_DRINKS.map(d => {
     const isLocked = stamps < d.stampsReq;
-    const lockSymbol = isLocked ? `🔒 (Requires ${d.stampsReq} Stamps)` : '✓ Unlocked';
+    const lockSymbol = isLocked ? `🔒 (${d.stampsReq} Stamps)` : '✓ Unlocked';
     return `<option value="${d.id}" ${isLocked ? 'disabled' : ''}>${d.name} ${lockSymbol}</option>`;
   }).join('');
 }
@@ -157,7 +156,7 @@ function initTimerAndMenu() {
   drinkSelect.addEventListener('change', (e) => {
     const selected = HEYTEA_DRINKS.find(d => d.id === e.target.value);
     if (getStampsCount() < selected.stampsReq) {
-      alert(`🔒 This drink requires ${selected.stampsReq} stamps to unlock!`);
+      alert(`🔒 Requires ${selected.stampsReq} stamps to unlock!`);
       drinkSelect.value = currentDrink.id;
       return;
     }
@@ -232,7 +231,6 @@ function startTimer() {
   if (isTimerRunning) return;
   isTimerRunning = true;
 
-  // Trigger pouring and cup spinning animations
   document.getElementById('pourStream').classList.remove('hidden');
   document.getElementById('liquidWave').classList.remove('hidden');
   document.getElementById('cupContainer').classList.add('brewing-spin');
@@ -243,12 +241,11 @@ function startTimer() {
       updateTimerDisplay();
     } else {
       pauseTimer();
-      // Add completed focus time to stamp progress
       const currentMins = getCompletedMinutes();
       localStorage.setItem('heytea_focus_mins', currentMins + activePomoMinutes);
       updateStampDisplay();
 
-      alert(`🍵 Your ${currentDrink.name} is fully brewed! Time recorded towards your next Loyalty Stamp.`);
+      alert(`🍵 Your ${currentDrink.name} is fully brewed! Stamp recorded.`);
     }
   }, 1000);
 }
@@ -278,10 +275,98 @@ function updateTimerDisplay() {
   document.getElementById('liquidMask').style.height = `${Math.max(0, 100 - progressPercent)}%`;
 }
 
-// 3. SYLLABUS VAULT & HARD PURGE
+// 3. VISUAL CALENDAR GRID & PLANNING WIDGET FORMS
+function initCalendarAndWidgets() {
+  document.getElementById('prevMonthBtn').addEventListener('click', () => {
+    currentCalDate.setMonth(currentCalDate.getMonth() - 1);
+    renderCalendarGrid();
+  });
+  document.getElementById('nextMonthBtn').addEventListener('click', () => {
+    currentCalDate.setMonth(currentCalDate.getMonth() + 1);
+    renderCalendarGrid();
+  });
+
+  // To-Do Manual Submit
+  document.getElementById('todoForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('todoInput');
+    const todos = JSON.parse(localStorage.getItem('heytea_todos') || '[]');
+    todos.push({ id: Date.now().toString(), text: input.value });
+    localStorage.setItem('heytea_todos', JSON.stringify(todos));
+    input.value = '';
+    renderWidgets();
+  });
+
+  // Calendar Manual Submit
+  document.getElementById('calendarForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = document.getElementById('eventTitleInput').value;
+    const date = document.getElementById('eventDateInput').value;
+    const events = JSON.parse(localStorage.getItem('heytea_events') || '[]');
+    events.push({ id: Date.now().toString(), title, date });
+    localStorage.setItem('heytea_events', JSON.stringify(events));
+    document.getElementById('calendarForm').reset();
+    renderWidgets();
+    renderCalendarGrid();
+  });
+
+  // Attendance Manual Submit
+  document.getElementById('attendanceForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const course = document.getElementById('attendClassInput').value;
+    const date = document.getElementById('attendDateInput').value;
+    const attendance = JSON.parse(localStorage.getItem('heytea_attendance') || '[]');
+    attendance.push({ id: Date.now().toString(), course, date });
+    localStorage.setItem('heytea_attendance', JSON.stringify(attendance));
+    document.getElementById('attendanceForm').reset();
+    renderWidgets();
+  });
+
+  renderCalendarGrid();
+  renderWidgets();
+}
+
+function renderCalendarGrid() {
+  const year = currentCalDate.getFullYear();
+  const month = currentCalDate.getMonth();
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+  document.getElementById('calendarMonthTitle').innerText = `${monthNames[month]} ${year}`;
+  
+  const firstDayIndex = new Date(year, month, 1).getDay();
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  const todayStr = new Date().toISOString().split('T')[0];
+  const grid = document.getElementById('calendarDaysGrid');
+  
+  const events = JSON.parse(localStorage.getItem('heytea_events') || '[]');
+  
+  let daysHtml = '';
+  for (let i = 0; i < firstDayIndex; i++) {
+    daysHtml += `<div class="cal-day empty"></div>`;
+  }
+  for (let d = 1; d <= lastDay; d++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const hasEvent = events.some(e => e.date === dateStr);
+    const isToday = todayStr === dateStr;
+    daysHtml += `<div class="cal-day ${hasEvent ? 'has-event' : ''} ${isToday ? 'today' : ''}">${d}</div>`;
+  }
+  grid.innerHTML = daysHtml;
+}
+
+function renderWidgets() {
+  const todos = JSON.parse(localStorage.getItem('heytea_todos') || '[]');
+  document.getElementById('todoList').innerHTML = todos.map(t => `<li>${t.text}</li>`).join('');
+
+  const events = JSON.parse(localStorage.getItem('heytea_events') || '[]');
+  document.getElementById('calendarList').innerHTML = events.map(e => `<li><span>${e.title}</span><small>${e.date}</small></li>`).join('');
+
+  const attendance = JSON.parse(localStorage.getItem('heytea_attendance') || '[]');
+  document.getElementById('attendanceList').innerHTML = attendance.map(a => `<li><span>${a.course}</span><small>${a.date}</small></li>`).join('');
+}
+
+// 4. SYLLABUS VAULT & HARD PURGE
 function initSyllabusAndVault() {
   renderSyllabusList();
-  renderWidgets();
 
   document.getElementById('syllabusForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -297,6 +382,7 @@ function initSyllabusAndVault() {
     document.getElementById('syllabusForm').reset();
     renderSyllabusList();
     renderWidgets();
+    renderCalendarGrid();
   });
 }
 
@@ -327,6 +413,7 @@ function deleteSyllabusAndPurgeMemory(syllabusId) {
 
   renderSyllabusList();
   renderWidgets();
+  renderCalendarGrid();
 }
 
 function renderSyllabusList() {
@@ -342,18 +429,7 @@ function renderSyllabusList() {
   `).join('');
 }
 
-function renderWidgets() {
-  const todos = JSON.parse(localStorage.getItem('heytea_todos') || '[]');
-  document.getElementById('todoList').innerHTML = todos.map(t => `<li>${t.text}</li>`).join('');
-
-  const events = JSON.parse(localStorage.getItem('heytea_events') || '[]');
-  document.getElementById('calendarList').innerHTML = events.map(e => `<li><span>${e.title}</span><small>${e.date}</small></li>`).join('');
-
-  const attendance = JSON.parse(localStorage.getItem('heytea_attendance') || '[]');
-  document.getElementById('attendanceList').innerHTML = attendance.map(a => `<li><span>${a.course}</span><small>${a.date}</small></li>`).join('');
-}
-
-// 4. ROUTINE BUILDER
+// 5. ROUTINE BUILDER
 function initRoutineBuilder() {
   document.getElementById('buildRoutineBtn').addEventListener('click', () => {
     const input = document.getElementById('routinePromptInput').value;
@@ -371,7 +447,7 @@ function initRoutineBuilder() {
   });
 }
 
-// 5. VENTING JOURNAL & STYLUS CANVAS
+// 6. VENTING JOURNAL & STYLUS CANVAS
 function initVentingJournal() {
   const canvas = document.getElementById('stylusCanvas');
   const ctx = canvas.getContext('2d');
@@ -421,7 +497,7 @@ function initVentingJournal() {
   });
 }
 
-// 6. HABIT TRACKER
+// 7. HABIT TRACKER
 function initHabitTracker() {
   const logs = JSON.parse(localStorage.getItem('heytea_habit_logs') || '[]');
   const oneYearAgo = new Date();
