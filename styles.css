@@ -1,6 +1,5 @@
 /* ==========================================================================
-   HAN GAO × MAK KAI HANG HEYTEA DESIGN SYSTEM
-    crisp porcelain off-white, strict 1px grid borders, uppercase tracking
+   HAN GAO × MAK KAI HANG HEYTEA DESIGN SYSTEM WITH BREWING ANIMATIONS
    ========================================================================== */
 
 :root {
@@ -31,7 +30,6 @@ body {
   transition: background-color 0.4s ease;
 }
 
-/* Editorial Metadata Typography */
 .meta-tag {
   display: block;
   font-size: 10px;
@@ -42,7 +40,6 @@ body {
   margin-bottom: 4px;
 }
 
-/* Header Bar */
 .header-bar {
   display: flex;
   justify-content: space-between;
@@ -64,6 +61,19 @@ body {
   gap: 16px;
 }
 
+.stamp-counter-badge {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  padding: 6px 14px;
+  border-radius: 12px;
+}
+
+.stamp-display {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
 .palette-preview {
   display: flex;
   gap: 6px;
@@ -76,7 +86,6 @@ body {
   border: 1px solid rgba(0,0,0,0.1);
 }
 
-/* Navigation Bar */
 .nav-bar {
   display: flex;
   overflow-x: auto;
@@ -96,7 +105,6 @@ body {
   color: var(--text-secondary);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
 }
 
 .nav-btn.active {
@@ -104,22 +112,15 @@ body {
   border-bottom-color: var(--accent-primary);
 }
 
-/* Main Content Layout */
 .content-container {
   max-width: 1280px;
   margin: 32px auto;
   padding: 0 24px;
 }
 
-.tab-content {
-  display: none;
-}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
-.tab-content.active {
-  display: block;
-}
-
-/* Cards & Grid Containers */
 .card {
   background: var(--surface-card);
   border: 1px solid var(--border-color);
@@ -141,36 +142,21 @@ body {
   margin-bottom: 24px;
 }
 
-.grid-2col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-.grid-3col {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.grid-journal {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
-}
+.grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-journal { display: grid; grid-template-columns: 260px 1fr; gap: 24px; }
 
 @media (max-width: 900px) {
-  .grid-2col, .grid-3col, .grid-journal {
-    grid-template-columns: 1fr;
-  }
+  .grid-2col, .grid-3col, .grid-journal { grid-template-columns: 1fr; }
 }
 
-/* Interactive Cup Container & Liquid Mask */
+/* CUP ANIMATION & ROTATION ENGINE */
 .cup-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
   margin: 32px 0 20px 0;
+  perspective: 1000px;
 }
 
 .cup-container {
@@ -182,6 +168,18 @@ body {
   overflow: hidden;
   background: #F5F5F5;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+  transition: transform 0.6s ease;
+}
+
+/* 3D Spin Animation while timer runs */
+.cup-container.brewing-spin {
+  animation: spinCup 6s infinite linear;
+}
+
+@keyframes spinCup {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(180deg); }
+  100% { transform: rotateY(360deg); }
 }
 
 .drink-photo {
@@ -191,19 +189,49 @@ body {
   display: block;
 }
 
-.drink-photo.hidden {
-  display: none;
-}
-
 .liquid-mask {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 100%;
-  background: rgba(20, 20, 20, 0.7);
+  background: rgba(20, 20, 20, 0.75);
   backdrop-filter: blur(4px);
   transition: height 0.5s ease-linear;
+}
+
+.pour-stream {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 32px;
+  background: var(--accent-primary, #EE6C4D);
+  border-radius: 4px;
+  z-index: 10;
+  animation: pourFlow 0.5s infinite linear;
+  box-shadow: 0 0 8px var(--accent-primary, #EE6C4D);
+}
+
+@keyframes pourFlow {
+  0%, 100% { transform: translateX(-50%) scaleY(0.9); opacity: 0.7; }
+  50% { transform: translateX(-50%) scaleY(1.1); opacity: 1; }
+}
+
+.liquid-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.4);
+  animation: waveMotion 1.2s infinite ease-in-out;
+}
+
+@keyframes waveMotion {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
 
 .toppings-layer {
@@ -223,7 +251,7 @@ body {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   animation: floatTopping 2s infinite ease-in-out;
 }
 
@@ -241,7 +269,6 @@ body {
   margin: 16px 0;
 }
 
-/* Buttons & Inputs */
 .btn-primary {
   background: var(--text-primary);
   color: #FFFFFF;
@@ -251,11 +278,6 @@ body {
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.btn-primary:hover {
-  opacity: 0.88;
 }
 
 .btn-secondary {
@@ -312,33 +334,15 @@ body {
   margin-bottom: 12px;
 }
 
-.textarea-field {
-  min-height: 100px;
-  resize: vertical;
-}
+.textarea-field { min-height: 100px; resize: vertical; }
 
-.photo-dropzone {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-  border: 2px dashed var(--border-color);
+.drink-info-card {
+  padding: 20px;
   border-radius: 16px;
-  cursor: pointer;
-  font-size: 12px;
-  color: var(--text-secondary);
   background: var(--bg-main);
-}
-
-.preview-img {
-  width: 100%;
-  max-height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
   border: 1px solid var(--border-color);
 }
 
-/* Journal Canvas */
 .stylus-canvas {
   width: 100%;
   height: 160px;
@@ -346,7 +350,6 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   touch-action: none;
-  cursor: crosshair;
 }
 
 .doc-title-input {
@@ -380,15 +383,9 @@ body {
   white-space: pre-line;
 }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
-.item-list {
-  list-style: none;
-  margin-top: 12px;
-}
-
+.item-list { list-style: none; margin-top: 12px; }
 .item-list li {
   display: flex;
   justify-content: space-between;
@@ -398,7 +395,6 @@ body {
   font-size: 13px;
 }
 
-/* View Switcher */
 .view-switcher {
   display: flex;
   background: var(--bg-main);
@@ -420,14 +416,9 @@ body {
 .view-btn.active {
   background: var(--surface-card);
   color: var(--text-primary);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.habit-grid-wrapper {
-  margin-top: 20px;
-  overflow-x: auto;
-}
-
+.habit-grid-wrapper { margin-top: 20px; overflow-x: auto; }
 .habit-row {
   display: flex;
   align-items: center;
@@ -437,12 +428,7 @@ body {
   border-radius: 12px;
   margin-bottom: 8px;
 }
-
-.habit-cells {
-  display: flex;
-  gap: 6px;
-}
-
+.habit-cells { display: flex; gap: 6px; }
 .habit-cell {
   width: 28px;
   height: 28px;
@@ -456,14 +442,12 @@ body {
   font-weight: 700;
   cursor: pointer;
 }
-
 .habit-cell.done {
   background: var(--accent-primary);
   color: #FFFFFF;
   border-color: var(--accent-primary);
 }
 
-/* Pomodoro Modes Pills */
 .pomodoro-modes {
   display: flex;
   gap: 8px;
@@ -480,48 +464,10 @@ body {
   font-weight: 700;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .pomo-btn.active {
   background: var(--text-primary);
   color: #ffffff;
   border-color: var(--text-primary);
-}
-
-/* Pouring Liquid Stream Animation */
-.pour-stream {
-  position: absolute;
-  top: -24px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 32px;
-  background: var(--accent-primary, #EE6C4D);
-  border-radius: 4px;
-  z-index: 10;
-  animation: pourFlow 0.5s infinite linear;
-  box-shadow: 0 0 8px var(--accent-primary, #EE6C4D);
-}
-
-@keyframes pourFlow {
-  0% { transform: translateX(-50%) scaleY(0.9); opacity: 0.7; }
-  50% { transform: translateX(-50%) scaleY(1.1); opacity: 1; }
-  100% { transform: translateX(-50%) scaleY(0.9); opacity: 0.7; }
-}
-
-/* Surface Wave Animation */
-.liquid-wave {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.4);
-  animation: waveMotion 1.2s infinite ease-in-out;
-}
-
-@keyframes waveMotion {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
 }
