@@ -16,9 +16,15 @@
     </div>
     
     <div class="header-actions">
+      <!-- Stamp Collection Counter -->
+      <div class="stamp-counter-badge">
+        <span class="meta-tag">TEA LOYALTY STAMPS</span>
+        <div class="stamp-display"> <span id="stampCountDisplay">0</span> STAMPS</div>
+      </div>
+
       <!-- Dynamic Theme Color Palette Extractor -->
       <label class="btn-secondary theme-upload-btn">
-        <span>📷 Extract Theme Palette</span>
+        <span> Extract Theme Palette</span>
         <input type="file" id="themeImageInput" accept="image/*" hidden />
       </label>
       <div id="palettePreview" class="palette-preview"></div>
@@ -37,7 +43,7 @@
 
   <main class="content-container">
 
-    <!-- TAB 1: 47-DRINK TIMER & PHOTO MANAGER -->
+    <!-- TAB 1: 47-DRINK TIMER & STAMP SYSTEM -->
     <section id="timerTab" class="tab-content active">
       <div class="grid-2col">
         
@@ -61,7 +67,7 @@
             <div id="pourStream" class="pour-stream hidden"></div>
 
             <div id="cupContainer" class="cup-container">
-              <img id="drinkPhotoDisplay" src="" alt="Drink Photo" class="drink-photo hidden" />
+              <img id="drinkPhotoDisplay" src="" alt="Drink Photo" class="drink-photo" />
               
               <!-- Liquid Mask & Wave Surface -->
               <div id="liquidMask" class="liquid-mask">
@@ -78,7 +84,7 @@
 
           <!-- Timer Controls -->
           <div class="btn-group">
-            <button id="startTimerBtn" class="btn-primary">Start Brewing 🧋</button>
+            <button id="startTimerBtn" class="btn-primary">Start Brewing </button>
             <button id="pauseTimerBtn" class="btn-secondary">Pause</button>
             <button id="resetTimerBtn" class="btn-secondary">Reset</button>
           </div>
@@ -90,28 +96,20 @@
           </div>
         </div>
 
-        <!-- Drink Menu & Photo Uploader -->
+        <!-- Menu Selection Card -->
         <div class="card menu-card">
-          <span class="meta-tag">MENU SELECTION & CUSTOM PHOTO MANAGER</span>
-          <h2 class="card-title">47 HeyTea Menu Items</h2>
+          <span class="meta-tag">UNLOCKABLE HEYTEA MENU</span>
+          <h2 class="card-title">47 Preset Drinks</h2>
+          <p class="card-subtitle">Earn 1 Stamp for every 60 minutes focused. Higher tier drinks require more stamps to unlock.</p>
           
           <div class="form-group">
             <label class="input-label">Select Drink Menu Item</label>
             <select id="drinkSelect" class="input-select"></select>
           </div>
 
-          <div class="form-group">
-            <label class="input-label">Upload Custom Photo for Selected Drink</label>
-            <label class="photo-dropzone">
-              <span id="uploadStatusText">Click to upload photo for this drink</span>
-              <input type="file" id="drinkPhotoInput" accept="image/*" hidden />
-            </label>
-          </div>
-
-          <div class="photo-preview-box">
-            <span class="meta-tag">CURRENT DRINK PHOTO PREVIEW</span>
-            <img id="menuPhotoPreview" src="" alt="Preview" class="preview-img hidden" />
-            <p id="noPhotoText" class="muted-text">No custom photo uploaded yet for this drink.</p>
+          <div class="drink-info-card">
+            <span class="meta-tag" id="unlockRequirementTag">STATUS: UNLOCKED</span>
+            <p id="drinkDescriptionText" class="muted-text">Select a drink from the menu to inspect its details and start brewing.</p>
           </div>
         </div>
 
@@ -141,15 +139,9 @@
     <!-- TAB 3: TO-DO, CALENDAR & ATTENDANCE -->
     <section id="widgetsTab" class="tab-content">
       <div class="grid-3col">
-        
-        <!-- To-Do List Widget -->
         <div class="card">
-          <div class="card-header-flex">
-            <div>
-              <span class="meta-tag">TASK MANAGEMENT</span>
-              <h3 class="card-title">To-Do List</h3>
-            </div>
-          </div>
+          <span class="meta-tag">TASK MANAGEMENT</span>
+          <h3 class="card-title">To-Do List</h3>
           <form id="todoForm" class="flex-input">
             <input type="text" id="todoInput" class="input-field" placeholder="New task..." required />
             <button type="submit" class="btn-primary">+</button>
@@ -157,7 +149,6 @@
           <ul id="todoList" class="item-list"></ul>
         </div>
 
-        <!-- Calendar Widget -->
         <div class="card">
           <span class="meta-tag">SCHEDULE</span>
           <h3 class="card-title">Calendar & Exams</h3>
@@ -169,7 +160,6 @@
           <ul id="calendarList" class="item-list"></ul>
         </div>
 
-        <!-- Attendance Tracker Widget -->
         <div class="card">
           <span class="meta-tag">ACADEMIC LOG</span>
           <h3 class="card-title">Attendance Tracker</h3>
@@ -180,7 +170,6 @@
           </form>
           <ul id="attendanceList" class="item-list"></ul>
         </div>
-
       </div>
     </section>
 
@@ -190,10 +179,8 @@
         <span class="meta-tag">AI SCHEDULE OPTIMIZER</span>
         <h2 class="card-title">Smart Routine Assistant</h2>
         <p class="card-subtitle">Type your raw schedule, walking durations, and constraints to generate an optimized itinerary.</p>
-
-        <textarea id="routinePromptInput" class="textarea-field" placeholder="Example: I have CS class at 10 AM, need to walk to the library (15 mins), finish lab writeup, eat lunch, and hit the gym at 4 PM..."></textarea>
+        <textarea id="routinePromptInput" class="textarea-field" placeholder="Example: CS class at 10 AM, library walk (15 mins), lab writeup, lunch, gym at 4 PM..."></textarea>
         <button id="buildRoutineBtn" class="btn-primary">Generate Clever Routine</button>
-
         <div id="routineOutput" class="output-box hidden"></div>
       </div>
     </section>
@@ -201,8 +188,6 @@
     <!-- TAB 5: VENTING JOURNAL & STYLUS CANVAS -->
     <section id="journalTab" class="tab-content">
       <div class="grid-journal">
-        
-        <!-- Sidebar Doc Manager -->
         <div class="card journal-sidebar">
           <div class="card-header-flex">
             <span class="meta-tag">ENTRIES</span>
@@ -211,15 +196,10 @@
           <ul id="journalDocList" class="doc-list"></ul>
         </div>
 
-        <!-- Editor & Apple Pencil Scratchpad -->
         <div class="card journal-editor">
           <span class="meta-tag" id="currentDocMeta">JOURNAL ENTRY</span>
           <input type="text" id="docTitleInput" class="doc-title-input" value="Untitled Entry" />
-
-          <!-- Typed Rant Area -->
           <textarea id="docTextInput" class="journal-textarea" placeholder="Vent freely, rant, write stream-of-consciousness thoughts here..."></textarea>
-
-          <!-- Apple Pencil / Stylus Drawing Canvas -->
           <div class="canvas-wrapper">
             <div class="canvas-header">
               <span class="meta-tag">STYLUS / APPLE PENCIL SCRATCHPAD</span>
@@ -227,17 +207,13 @@
             </div>
             <canvas id="stylusCanvas" class="stylus-canvas"></canvas>
           </div>
-
-          <button id="declutterBtn" class="btn-primary">✨ De-clutter Thoughts & Reframe</button>
-
-          <!-- AI Bullet Point Analysis Output -->
+          <button id="declutterBtn" class="btn-primary"> De-clutter Thoughts & Reframe</button>
           <div id="declutterOutput" class="analysis-box hidden"></div>
         </div>
-
       </div>
     </section>
 
-    <!-- TAB 6: HABIT TRACKER (DAY / WEEK / MONTH) -->
+    <!-- TAB 6: HABIT TRACKER -->
     <section id="habitTab" class="tab-content">
       <div class="card">
         <div class="card-header-flex">
@@ -246,20 +222,16 @@
             <h2 class="card-title">Habit Tracker</h2>
             <p class="card-subtitle">Logs older than 365 days automatically purge on launch.</p>
           </div>
-
-          <!-- Day / Week / Month View Switcher -->
           <div class="view-switcher">
             <button class="view-btn active" data-view="day">Day</button>
             <button class="view-btn" data-view="week">Week</button>
             <button class="view-btn" data-view="month">Month</button>
           </div>
         </div>
-
         <form id="addHabitForm" class="flex-input">
           <input type="text" id="habitNameInput" class="input-field" placeholder="New habit name..." required />
           <button type="submit" class="btn-primary">Add Habit</button>
         </form>
-
         <div id="habitGridContainer" class="habit-grid-wrapper"></div>
       </div>
     </section>
