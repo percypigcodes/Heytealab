@@ -1,0 +1,457 @@
+/* ==========================================================================
+   HAN GAO × MAK KAI HANG HEYTEA DESIGN SYSTEM
+    crisp porcelain off-white, strict 1px grid borders, uppercase tracking
+   ========================================================================== */
+
+:root {
+  --bg-main: #FAF9F6;
+  --surface-card: #FFFFFF;
+  --border-color: #E5E5E5;
+  --text-primary: #111111;
+  --text-secondary: #737373;
+  --accent-primary: #EE6C4D;
+  --accent-soft: rgba(238, 108, 77, 0.1);
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  line-height: 1.5;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  transition: background-color 0.4s ease;
+}
+
+/* Editorial Metadata Typography */
+.meta-tag {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+/* Header Bar */
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brand-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.palette-preview {
+  display: flex;
+  gap: 6px;
+}
+
+.color-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Navigation Bar */
+.nav-bar {
+  display: flex;
+  overflow-x: auto;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 32px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.nav-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-primary);
+}
+
+/* Main Content Layout */
+.content-container {
+  max-width: 1280px;
+  margin: 32px auto;
+  padding: 0 24px;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Cards & Grid Containers */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.card-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.grid-journal {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .grid-2col, .grid-3col, .grid-journal {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Interactive Cup Container & Liquid Mask */
+.cup-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.cup-container {
+  position: relative;
+  width: 180px;
+  height: 240px;
+  border: 2px solid var(--border-color);
+  border-radius: 20px 20px 32px 32px;
+  overflow: hidden;
+  background: #F5F5F5;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+}
+
+.drink-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.drink-photo.hidden {
+  display: none;
+}
+
+.liquid-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(4px);
+  transition: height 0.5s ease-linear;
+}
+
+.toppings-layer {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  z-index: 5;
+}
+
+.topping-pearl {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.timer-display {
+  font-size: 54px;
+  font-weight: 800;
+  font-family: monospace;
+  text-align: center;
+  letter-spacing: -0.03em;
+  margin: 16px 0;
+}
+
+/* Buttons & Inputs */
+.btn-primary {
+  background: var(--text-primary);
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.88;
+}
+
+.btn-secondary {
+  background: var(--surface-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 12px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.toppings-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.topping-chip {
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-main);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.topping-chip.selected {
+  background: var(--text-primary);
+  color: #FFFFFF;
+  border-color: var(--text-primary);
+}
+
+.input-field, .input-select, .textarea-field {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-main);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.textarea-field {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.photo-dropzone {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  border: 2px dashed var(--border-color);
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-main);
+}
+
+.preview-img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+/* Journal Canvas */
+.stylus-canvas {
+  width: 100%;
+  height: 160px;
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.doc-title-input {
+  width: 100%;
+  font-size: 24px;
+  font-weight: 800;
+  border: none;
+  outline: none;
+  background: transparent;
+  margin-bottom: 12px;
+}
+
+.journal-textarea {
+  width: 100%;
+  height: 140px;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  font-size: 14px;
+  background: transparent;
+}
+
+.output-box, .analysis-box {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-primary);
+  padding: 20px;
+  border-radius: 16px;
+  margin-top: 16px;
+  font-size: 13px;
+  white-space: pre-line;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.item-list {
+  list-style: none;
+  margin-top: 12px;
+}
+
+.item-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
+}
+
+/* View Switcher */
+.view-switcher {
+  display: flex;
+  background: var(--bg-main);
+  padding: 4px;
+  border-radius: 100px;
+  border: 1px solid var(--border-color);
+}
+
+.view-btn {
+  border: none;
+  background: none;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.view-btn.active {
+  background: var(--surface-card);
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.habit-grid-wrapper {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.habit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: var(--bg-main);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.habit-cells {
+  display: flex;
+  gap: 6px;
+}
+
+.habit-cell {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--surface-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.habit-cell.done {
+  background: var(--accent-primary);
+  color: #FFFFFF;
+  border-color: var(--accent-primary);
+}
