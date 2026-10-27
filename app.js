@@ -70,8 +70,9 @@ const TOPPINGS = [
 
 // Global Application State
 let currentDrink = HEYTEA_DRINKS[0];
+let activePomoMinutes = currentDrink.mins;
 let timerInterval = null;
-let timeRemaining = currentDrink.mins * 60;
+let timeRemaining = activePomoMinutes * 60;
 let isTimerRunning = false;
 let selectedToppings = [];
 let habitViewMode = 'day';
@@ -150,19 +151,30 @@ function renderPalettePreview(colors) {
 }
 
 // ==========================================
-// 2. 47-DRINK TIMER & PHOTO UPLOADER
+// 2. 47-DRINK TIMER & ANIMATED BREWING ENGINE
 // ==========================================
 function initTimerAndMenu() {
   const drinkSelect = document.getElementById('drinkSelect');
-  drinkSelect.innerHTML = HEYTEA_DRINKS.map(d => `<option value="${d.id}">${d.name} (${d.mins} min)</option>`).join('');
+  drinkSelect.innerHTML = HEYTEA_DRINKS.map(d => `<option value="${d.id}">${d.name} (${d.mins} min focus)</option>`).join('');
 
   drinkSelect.addEventListener('change', (e) => {
     currentDrink = HEYTEA_DRINKS.find(d => d.id === e.target.value);
+    activePomoMinutes = currentDrink.mins;
     resetTimer();
     updateDrinkDisplay();
   });
 
-  // Toppings Render
+  // Pomodoro Preset Mode Switcher
+  document.querySelectorAll('.pomo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pomo-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activePomoMinutes = parseInt(btn.dataset.time, 10);
+      resetTimer();
+    });
+  });
+
+  // Toppings Selector Setup
   const toppingsList = document.getElementById('toppingsList');
   toppingsList.innerHTML = TOPPINGS.map(t => `
     <button class="topping-chip" data-id="${t.id}">${t.name}</button>
@@ -183,7 +195,7 @@ function initTimerAndMenu() {
     renderToppingsInCup();
   });
 
-  // Photo Upload Handler per drink
+  // Photo Uploader
   document.getElementById('drinkPhotoInput').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -198,7 +210,6 @@ function initTimerAndMenu() {
     reader.readAsDataURL(file);
   });
 
-  // Timer Controls
   document.getElementById('startTimerBtn').addEventListener('click', startTimer);
   document.getElementById('pauseTimerBtn').addEventListener('click', pauseTimer);
   document.getElementById('resetTimerBtn').addEventListener('click', resetTimer);
@@ -208,7 +219,7 @@ function initTimerAndMenu() {
 
 function updateDrinkDisplay() {
   document.getElementById('currentDrinkTitle').innerText = currentDrink.name;
-  document.getElementById('currentDrinkCategory').innerText = `${currentDrink.category} • ${currentDrink.mins} Mins`;
+  document.getElementById('currentDrinkCategory').innerText = `${currentDrink.category} • ${activePomoMinutes} Mins Focus`;
   
   const photos = JSON.parse(localStorage.getItem('heytea_photos') || '{}');
   const customPhoto = photos[currentDrink.id];
@@ -238,13 +249,18 @@ function renderToppingsInCup() {
 function startTimer() {
   if (isTimerRunning) return;
   isTimerRunning = true;
+
+  // Show pouring animation effects
+  document.getElementById('pourStream').classList.remove('hidden');
+  document.getElementById('liquidWave').classList.remove('hidden');
+
   timerInterval = setInterval(() => {
     if (timeRemaining > 0) {
       timeRemaining--;
       updateTimerDisplay();
     } else {
       pauseTimer();
-      alert(`🍵 Your ${currentDrink.name} is ready! Time to take a break.`);
+      alert(`🍵 Your ${currentDrink.name} is fully brewed! Time for a well-deserved break.`);
     }
   }, 1000);
 }
@@ -252,11 +268,15 @@ function startTimer() {
 function pauseTimer() {
   isTimerRunning = false;
   clearInterval(timerInterval);
+
+  // Hide pouring animation effects
+  document.getElementById('pourStream').classList.add('hidden');
+  document.getElementById('liquidWave').classList.add('hidden');
 }
 
 function resetTimer() {
   pauseTimer();
-  timeRemaining = currentDrink.mins * 60;
+  timeRemaining = activePomoMinutes * 60;
   updateTimerDisplay();
 }
 
@@ -265,9 +285,11 @@ function updateTimerDisplay() {
   const s = (timeRemaining % 60).toString().padStart(2, '0');
   document.getElementById('timerDisplay').innerText = `${m}:${s}`;
 
-  const totalSecs = currentDrink.mins * 60;
+  const totalSecs = activePomoMinutes * 60;
   const progressPercent = ((totalSecs - timeRemaining) / totalSecs) * 100;
-  document.getElementById('liquidMask').style.height = `${100 - progressPercent}%`;
+  
+  // Smoothly lift the mask overlay to reveal the drink photo/liquid inside
+  document.getElementById('liquidMask').style.height = `${Math.max(0, 100 - progressPercent)}%`;
 }
 
 // ==========================================
@@ -287,7 +309,6 @@ function initSyllabusAndVault() {
     syllabi.push({ id, course, text });
     localStorage.setItem('heytea_syllabi', JSON.stringify(syllabi));
 
-    // Auto-fill To-Do, Calendar, Attendance
     autoFillFromSyllabus(id, course, text);
 
     document.getElementById('syllabusForm').reset();
@@ -310,13 +331,11 @@ function autoFillFromSyllabus(syllabusId, course, text) {
   localStorage.setItem('heytea_attendance', JSON.stringify(attendance));
 }
 
-// CASCADE HARD PURGE FUNCTION
 function deleteSyllabusAndPurgeMemory(syllabusId) {
   let syllabi = JSON.parse(localStorage.getItem('heytea_syllabi') || '[]');
   syllabi = syllabi.filter(s => s.id !== syllabusId);
   localStorage.setItem('heytea_syllabi', JSON.stringify(syllabi));
 
-  // Purge linked memory
   ['heytea_todos', 'heytea_events', 'heytea_attendance'].forEach(key => {
     let items = JSON.parse(localStorage.getItem(key) || '[]');
     items = items.filter(i => i.syllabusId !== syllabusId);
@@ -387,7 +406,6 @@ function initVentingJournal() {
   }
   resizeCanvas();
 
-  // Apple Pencil / Touch & Mouse Events
   const getPos = (e) => {
     const rect = canvas.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -410,7 +428,6 @@ function initVentingJournal() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
 
-  // AI De-clutterer
   document.getElementById('declutterBtn').addEventListener('click', () => {
     const text = document.getElementById('docTextInput').value;
     if (!text.trim()) return;
@@ -429,7 +446,6 @@ function initVentingJournal() {
 // 6. HABIT TRACKER WITH 365-DAY AUTO-PURGE
 // ==========================================
 function initHabitTracker() {
-  // 365-Day Auto-Purge Logic on Load
   const logs = JSON.parse(localStorage.getItem('heytea_habit_logs') || '[]');
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -437,7 +453,6 @@ function initHabitTracker() {
   const cleanLogs = logs.filter(l => new Date(l.date) >= oneYearAgo);
   localStorage.setItem('heytea_habit_logs', JSON.stringify(cleanLogs));
 
-  // View Switcher
   document.querySelectorAll('.view-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
